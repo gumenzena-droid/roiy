@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Команда — это единый организм</title>
+  <style>
+    :root {
+      --bg: #020403;
+      --panel: rgba(6, 16, 10, 0.78);
+      --panel-2: rgba(10, 25, 14, 0.88);
+      --green: #8cff00;
+      --green-2: #54d900;
+      --green-soft: rgba(140, 255, 0, 0.22);
+      --white: #f7fff1;
+      --muted: rgba(247, 255, 241, 0.72);
+      --line: rgba(140, 255, 0, 0.32);
+      --danger: #ff4d6d;
+      --gold: #d9b86c;
+      --shadow: 0 0 40px rgba(140, 255, 0, 0.16), inset 0 0 24px rgba(140, 255, 0, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 78% 28%, rgba(127, 255, 0, 0.22), transparent 25%),
+        radial-gradient(circle at 8% 52%, rgba(127, 255, 0, 0.15), transparent 24%),
+        linear-gradient(135deg, #000 0%, #031006 42%, #000 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::before {
+      background-image:
+        linear-gradient(rgba(140, 255, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(140, 255, 0, 0.08) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(circle at 74% 28%, black, transparent 52%);
+    }
+
+    body::after {
+      background:
+        linear-gradient(90deg, transparent, rgba(140, 255, 0, 0.24), transparent) 0 34% / 100% 2px no-repeat,
+        linear-gradient(90deg, transparent, rgba(140, 255, 0, 0.12), transparent) 0 82% / 100% 1px no-repeat;
+      animation: scan 4.8s ease-in-out infinite;
+    }
+
+    @keyframes scan {
+      0%, 100% { opacity: .35; transform: translateY(0); }
+      50% { opacity: .9; transform: translateY(8px); }
+    }
+
+    .app {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 30px 0 42px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 330px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(0,0,0,.82), rgba(4, 18, 8, .78));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px));
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -92px;
+      top: -108px;
+      width: 430px;
+      height: 430px;
+      border: 2px solid rgba(140,255,0,.28);
+      border-radius: 50%;
+      box-shadow: 0 0 0 32px rgba(140,255,0,.035), 0 0 0 74px rgba(140,255,0,.025), inset 0 0 52px rgba(140,255,0,.16);
+      animation: rotate 22s linear infinite;
+    }
+
+    .hero::after {
+      content: "»";
+      position: absolute;
+      right: 62px;
+      top: 150px;
+      font-size: 94px;
+      line-height: 1;
+      color: var(--green);
+      text-shadow: 0 0 24px rgba(140,255,0,.75);
+    }
+
+    @keyframes rotate { to { transform: rotate(360deg); } }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 13px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge {
+      display: inline-grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      background: rgba(140,255,0,.08);
+      box-shadow: 0 0 24px rgba(140,255,0,.2);
+      clip-path: polygon(18% 0, 82% 0, 100% 18%, 100% 82%, 82% 100%, 18% 100%, 0 82%, 0 18%);
+      font-size: 25px;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 2;
+      max-width: 920px;
+      margin: 70px 0 20px;
+      font-size: clamp(44px, 7.5vw, 105px);
+      line-height: .92;
+      letter-spacing: .025em;
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(140,255,0,.24), 0 2px 0 rgba(255,255,255,.16);
+    }
+
+    .hero-subtitle {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 24px);
+      line-height: 1.45;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      padding: 14px 24px;
+      color: var(--green);
+      border: 1px solid var(--line);
+      background: rgba(140,255,0,.08);
+      box-shadow: 0 0 28px rgba(140,255,0,.15);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(330px, .95fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(18px);
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .hint {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 126px;
+      resize: vertical;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(140,255,0,.35);
+      outline: none;
+      background: rgba(0, 0, 0, .45);
+      color: var(--white);
+      font-size: 18px;
+      line-height: 1.5;
+      box-shadow: inset 0 0 22px rgba(140,255,0,.07);
+    }
+
+    textarea:focus { border-color: var(--green); box-shadow: 0 0 0 4px rgba(140,255,0,.12), inset 0 0 22px rgba(140,255,0,.07); }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid rgba(140,255,0,.42);
+      border-radius: 16px;
+      padding: 14px 17px;
+      background: linear-gradient(180deg, rgba(140,255,0,.17), rgba(61,145,0,.14));
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: .02em;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      box-shadow: 0 10px 28px rgba(0,0,0,.25);
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: var(--green);
+      box-shadow: 0 0 26px rgba(140,255,0,.22), 0 12px 28px rgba(0,0,0,.32);
+    }
+
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .primary {
+      color: #081004;
+      background: linear-gradient(135deg, #d6ff4a, #73ff00 54%, #35a600);
+      border-color: rgba(214,255,74,.9);
+      text-shadow: 0 1px 0 rgba(255,255,255,.3);
+    }
+
+    .danger {
+      border-color: rgba(255, 77, 109, .38);
+      background: linear-gradient(180deg, rgba(255, 77, 109, .18), rgba(90, 0, 20, .18));
+    }
+
+    .status {
+      margin-top: 15px;
+      min-height: 28px;
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .lottery {
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lottery::before {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border-radius: 50%;
+      border: 1px dashed rgba(140,255,0,.32);
+      animation: rotate 12s linear infinite;
+    }
+
+    .lottery-title {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .roulette-number {
+      font-size: clamp(54px, 9vw, 102px);
+      color: var(--green);
+      font-weight: 1000;
+      text-shadow: 0 0 34px rgba(140,255,0,.74);
+      letter-spacing: .06em;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .role-card {
+      position: relative;
+      min-height: 154px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(140,255,0,.34);
+      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(140,255,0,.06));
+      box-shadow: 0 16px 34px rgba(0,0,0,.32), inset 0 0 22px rgba(140,255,0,.05);
+      overflow: hidden;
+      animation: rise .45s ease both;
+    }
+
+    .role-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% 0 -20%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      box-shadow: 0 0 18px rgba(140,255,0,.85);
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .role-emoji { font-size: 34px; margin-bottom: 12px; }
+    .role-name { color: var(--muted); text-transform: uppercase; letter-spacing: .1em; font-weight: 900; font-size: 13px; }
+    .participant { margin-top: 12px; font-size: 28px; font-weight: 1000; color: var(--white); }
+
+    .sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .hidden { display: none !important; }
+
+    .week {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(140,255,0,.22);
+      background: rgba(0,0,0,.28);
+    }
+
+    .week h3 { margin: 0 0 10px; color: var(--green); }
+    .week-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .week-row:last-child { border-bottom: 0; }
+
+    .rules-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rules-list li {
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(0,0,0,.86);
+      color: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 0 28px rgba(140,255,0,.22);
+      border-radius: 16px;
+      padding: 14px 18px;
+      z-index: 10;
+      opacity: 0;
+      transition: .32s ease;
+      text-align: center;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .empty {
+      color: var(--muted);
+      padding: 18px;
+      border: 1px dashed rgba(255,255,255,.2);
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 930px) {
+      .grid, .sections { grid-template-columns: 1fr; }
+      .results { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+      .hero { padding: 24px; min-height: 360px; }
+      .hero::before { width: 320px; height: 320px; right: -150px; top: -60px; }
+      .hero::after { right: 24px; top: 215px; opacity: .45; }
+      h1 { margin-top: 52px; }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100% - 18px, 1220px); padding-top: 10px; }
+      .hero { border-radius: 18px; clip-path: none; }
+      .topline { align-items: flex-start; }
+      .results { grid-template-columns: 1fr; }
+      .buttons { flex-direction: column; }
+      button { width: 100%; }
+      .panel { padding: 18px; border-radius: 18px; }
+      .week-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="topline">
+        <div class="badge">◉</div>
+        <div>
+          <div>Команда</div>
+          <div style="color: var(--green); margin-top: 4px;">Единый организм</div>
+        </div>
+      </div>
+      <h1>Команда —<br>это единый организм</h1>
+      <p class="hero-subtitle">Когда каждый на своём месте — команда работает как единое целое</p>
+      <div class="hero-chip">» сила в единстве</div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Распределение ролей недели</h2>
+        <p class="hint">Введите номера участников через запятую, пробел или с новой строки. Сервис работает только с номерами и сохраняет историю в браузере.</p>
+        <textarea id="participantsInput" placeholder="Например: 1,2,3,4,5,6,7,8,9,10">1,2,3,4,5,6,7,8,9,10</textarea>
+        <div class="buttons">
+          <button class="primary" id="assignBtn">🎲 Назначить роли недели</button>
+          <button id="copyBtn">📋 Скопировать результаты</button>
+          <button id="historyBtn">📊 Показать историю ролей</button>
+          <button class="danger" id="resetBtn">🗑 Сбросить историю</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="panel lottery" id="lotteryBox">
+        <div>
+          <div class="lottery-title">ожидание жеребьёвки</div>
+          <div class="roulette-number" id="rouletteNumber">№?</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="resultsPanel">
+      <h2>Роли недели</h2>
+      <div class="results" id="results"></div>
+    </section>
+
+    <section class="sections">
+      <div class="panel hidden" id="historyPanel">
+        <h2>История распределений</h2>
+        <div id="historyList"></div>
+      </div>
+      <div class="panel">
+        <h2>Правила честной жеребьёвки</h2>
+        <ul class="rules-list">
+          <li>Один участник не может получить две роли в течение одной недели.</li>
+          <li>Одна и та же роль не повторяется у участника, пока остальные не пройдут эту роль.</li>
+          <li>После полного круга история по роли автоматически открывает новый цикл.</li>
+          <li>Данные сохраняются в localStorage и не теряются после закрытия страницы.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const ROLES = [
+      { key: 'heart', emoji: '❤️', name: 'Сердце' },
+      { key: 'dopamine', emoji: '⚡', name: 'Дофамин' },
+      { key: 'brain', emoji: '🧠', name: 'Мозг' },
+      { key: 'soul', emoji: '✨', name: 'Душа' },
+      { key: 'dna', emoji: '🌟', name: 'ДНК' }
+    ];
+
+    const STORAGE_KEY = 'team-organism-role-service-v1';
+    const input = document.getElementById('participantsInput');
+    const assignBtn = document.getElementById('assignBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const historyBtn = document.getElementById('historyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusEl = document.getElementById('status');
+    const rouletteNumber = document.getElementById('rouletteNumber');
+    const resultsPanel = document.getElementById('resultsPanel');
+    const resultsEl = document.getElementById('results');
+    const historyPanel = document.getElementById('historyPanel');
+    const historyList = document.getElementById('historyList');
+    const toast = document.getElementById('toast');
+
+    let currentAssignments = null;
+    let spinning = false;
+
+    function emptyState() {
+      return {
+        roleCycles: Object.fromEntries(ROLES.map(role => [role.key, []])),
+        weeks: []
+      };
+    }
+
+    function loadState() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!parsed || !parsed.roleCycles || !Array.isArray(parsed.weeks)) return emptyState();
+        ROLES.forEach(role => {
+          if (!Array.isArray(parsed.roleCycles[role.key])) parsed.roleCycles[role.key] = [];
+        });
+        return parsed;
+      } catch (error) {
+        return emptyState();
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function parseParticipants() {
+      const values = input.value
+        .split(/[\s,;]+/)
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      const unique = [];
+      const seen = new Set();
+      values.forEach(value => {
+        const clean = value.replace(/^№/, '');
+        if (!seen.has(clean)) {
+          seen.add(clean);
+          unique.push(clean);
+        }
+      });
+      return unique;
+    }
+
+    function randomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.style.color = isError ? 'var(--danger)' : 'var(--green)';
+    }
+
+    function createAssignments(participants, state) {
+      if (participants.length < ROLES.length) {
+        throw new Error('Для пяти ролей нужно минимум 5 участников. Добавьте номера участников и запустите жеребьёвку снова.');
+      }
+
+      const assigned = new Set();
+      const assignments = [];
+      const updatedCycles = JSON.parse(JSON.stringify(state.roleCycles));
+      const roleOrder = shuffle(ROLES);
+
+      roleOrder.forEach(role => {
+        const historyForRole = updatedCycles[role.key].filter(num => participants.includes(num));
+        updatedCycles[role.key] = historyForRole;
+
+        let candidates = participants.filter(num => !assigned.has(num) && !historyForRole.includes(num));
+
+        if (candidates.length === 0) {
+          updatedCycles[role.key] = [];
+          candidates = participants.filter(num => !assigned.has(num));
+          showToast(`Для роли «${role.name}» начался новый цикл.`);
+        }
+
+        if (candidates.length === 0) {
+          throw new Error('Не удалось распределить роли без повторов внутри недели. Проверьте количество участников.');
+        }
+
+        const chosen = randomItem(candidates);
+        assigned.add(chosen);
+        updatedCycles[role.key].push(chosen);
+        assignments.push({ ...role, participant: chosen });
+      });
+
+      assignments.sort((a, b) => ROLES.findIndex(role => role.key === a.key) - ROLES.findIndex(role => role.key === b.key));
+      state.roleCycles = updatedCycles;
+      state.weeks.push({
+        week: state.weeks.length + 1,
+        date: new Date().toLocaleString('ru-RU'),
+        assignments
+      });
+      saveState(state);
+      return assignments;
+    }
+
+    function runAnimation(participants, onComplete) {
+      spinning = true;
+      assignBtn.disabled = true;
+      resultsPanel.classList.add('hidden');
+      setStatus('Идёт жеребьёвка. Система выбирает роли недели...');
+
+      const start = Date.now();
+      const duration = 4200;
+      const interval = setInterval(() => {
+        rouletteNumber.textContent = `№${randomItem(participants)}`;
+      }, 65);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        spinning = false;
+        assignBtn.disabled = false;
+        onComplete();
+      }, duration);
+    }
+
+    function renderResults(assignments) {
+      currentAssignments = assignments;
+      resultsEl.innerHTML = assignments.map((item, index) => `
+        <article class="role-card" style="animation-delay:${index * 70}ms">
+          <div class="role-emoji">${item.emoji}</div>
+          <div class="role-name">${item.name}</div>
+          <div class="participant">№${item.participant}</div>
+        </article>
+      `).join('');
+      resultsPanel.classList.remove('hidden');
+      rouletteNumber.textContent = '✓';
+      setStatus('Роли недели назначены. Результаты можно скопировать для Telegram.');
+    }
+
+    function renderHistory() {
+      const state = loadState();
+      if (!state.weeks.length) {
+        historyList.innerHTML = '<div class="empty">История пока пустая. Назначьте роли недели, и первая запись появится здесь.</div>';
+        return;
+      }
+
+      historyList.innerHTML = state.weeks.slice().reverse().map(week => `
+        <div class="week">
+          <h3>Неделя ${week.week}</h3>
+          <div class="hint" style="margin-bottom: 8px;">${week.date || ''}</div>
+          ${week.assignments.map(item => `
+            <div class="week-row">
+              <span>${item.emoji} ${item.name}</span>
+              <strong>Участник №${item.participant}</strong>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function buildTelegramText() {
+      if (!currentAssignments) return '';
+      return 'Роли недели:\n\n' + currentAssignments
+        .map(item => `${item.emoji} ${item.name} — №${item.participant}`)
+        .join('\n');
+    }
+
+    async function copyResults() {
+      const text = buildTelegramText();
+      if (!text) {
+        showToast('Сначала назначьте роли недели.');
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Результаты скопированы для Telegram.');
+      } catch (error) {
+        const helper = document.createElement('textarea');
+        helper.value = text;
+        document.body.appendChild(helper);
+        helper.select();
+        document.execCommand('copy');
+        document.body.removeChild(helper);
+        showToast('Результаты скопированы для Telegram.');
+      }
+    }
+
+    assignBtn.addEventListener('click', () => {
+      if (spinning) return;
+      const participants = parseParticipants();
+      if (!participants.length) {
+        setStatus('Введите номера участников.', true);
+        return;
+      }
+
+      runAnimation(participants, () => {
+        try {
+          const state = loadState();
+          const assignments = createAssignments(participants, state);
+          renderResults(assignments);
+          renderHistory();
+        } catch (error) {
+          rouletteNumber.textContent = '№?';
+          setStatus(error.message, true);
+          showToast(error.message);
+        }
+      });
+    });
+
+    copyBtn.addEventListener('click', copyResults);
+
+    historyBtn.addEventListener('click', () => {
+      historyPanel.classList.toggle('hidden');
+      renderHistory();
+      historyBtn.textContent = historyPanel.classList.contains('hidden') ? '📊 Показать историю ролей' : '📊 Скрыть историю ролей';
+    });
+
+    resetBtn.addEventListener('click', () => {
+      const confirmReset = confirm('Сбросить всю историю ролей? Это действие нельзя отменить.');
+      if (!confirmReset) return;
+      localStorage.removeItem(STORAGE_KEY);
+      currentAssignments = null;
+      resultsPanel.classList.add('hidden');
+      rouletteNumber.textContent = '№?';
+      renderHistory();
+      setStatus('История сброшена. Можно начинать новый цикл распределений.');
+      showToast('История успешно сброшена.');
+    });
+
+    renderHistory();
+  </script>
+</body>
+</html>
